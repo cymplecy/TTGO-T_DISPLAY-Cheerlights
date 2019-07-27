@@ -8,4 +8,8 @@
 
 @Martinbateman updated his clock algorthim/code so I merged in my cheerlights stuff into his code and this is result
 
+### MB_Clock3_Timezone-Cheerlights-TTGO-T-DISPLAY-Cheerlights.ino
+
+Merged in automatic timezone code from @kd8bxp LeRoy Miller
+
 
