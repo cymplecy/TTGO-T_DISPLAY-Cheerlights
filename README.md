@@ -1,6 +1,6 @@
 # TTGO-T_DISPLAY-Cheerlights
 
-MartinClock-Cheerlight-T-DISPLAY.ino
+## MartinClock-Cheerlight-T-DISPLAY.ino
 
 @martinbateman wrote a clock program for the T-DISPLAY - I modified it to use Cheerlights information
 
