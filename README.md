@@ -10,7 +10,7 @@ Set of files to display clock on a TTGO-T-DISPLAY EPS32 device
 
 @Martinbateman updated his clock algorthim/code so I merged in my cheerlights stuff into his code and this is result
 
-### Mv3 B_Clock3_Timezone-Cheerlights-TTGO-T-DISPLAY-Cheerlights.ino
+### v3 MB_Clock3_Timezone-Cheerlights-TTGO-T-DISPLAY-Cheerlights.ino
 
 Merged in automatic timezone code from @kd8bxp LeRoy Miller
 
