@@ -1,5 +1,7 @@
 # TTGO-T_DISPLAY-Cheerlights
 
+Set of files to display clock on a TTGO-T-DISPLAY EPS32 device
+
 ### MartinClock-Cheerlight-T-DISPLAY.ino
 
 @martinbateman wrote a clock program for the T-DISPLAY - I modified it to use Cheerlights information
