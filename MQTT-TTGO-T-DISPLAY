@@ -1,3 +1,22 @@
+/*
+  MQTT Receiver for TTGO-T-DISPLAY Board
+ based on @martinbateman clock code
+ 
+ It just listens for MQTT messages and executes them
+ All colors ,must be rgb565 in decimal format
+ 
+ Currrent topics supported:
+ 
+ fillscreen
+ payload = color
+ 
+ texttocolor
+ payload = foreground,background (e.g two numbers seperated by a comma
+ 
+ drawString
+ payload = string,xPosition,YPosition,fontNumber
+ 
+*/
 #include <WiFi.h>
 //#include <NTPClient.h>
 //#include <WiFiUdp.h>
@@ -11,9 +30,9 @@
 
 
 // Replace with your network credentials
-const char* ssid     = "CYCY";
-const char* password = "";
-const char* mqtt_server = "192.168.0.23";
+const char* ssid     = "xxxxxx";
+const char* password = "yyyyyy";
+const char* mqtt_server = "zzzzzzzz";
 
 //int cheer_red = 0;
 //int cheer_green = 0;
