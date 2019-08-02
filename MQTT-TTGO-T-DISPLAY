@@ -1,0 +1,146 @@
+#include <WiFi.h>
+//#include <NTPClient.h>
+//#include <WiFiUdp.h>
+#include <PubSubClient.h>
+
+
+#include <TFT_eSPI.h>
+#include <SPI.h>
+
+#define TFT_BL          4  // Dispaly backlight control pin
+
+
+// Replace with your network credentials
+const char* ssid     = "CYCY";
+const char* password = "";
+const char* mqtt_server = "192.168.0.23";
+
+//int cheer_red = 0;
+//int cheer_green = 0;
+//int cheer_blue = 0;
+unsigned int rgb565Decimal = 0;
+//unsigned int newrgb565Decimal;
+//String colourString = "not set yet";
+//String newColourString;
+int textColour = 0xFFFF;
+int textBackColour = 0;
+String textString = "00:00:00";
+int textXPos = 0;  
+int textYPos = 0;
+int textFont = 7;
+
+String strData;
+String topicStr;
+
+
+
+//WiFiUDP ntpUDP;
+//NTPClient timeClient(ntpUDP);
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+TFT_eSPI tft = TFT_eSPI();
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+
+  Serial.print("Message arrived in topic: ");
+  Serial.println(topic);
+  topicStr = topic;
+
+  Serial.print("Message:");
+  
+  strData = "";
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+    strData += (char)payload[i];
+  }
+  
+  Serial.println();
+  Serial.println("-----------------------");
+
+  if (topicStr.endsWith("fillscreen")) {
+       tft.fillScreen(strData.toInt());
+  }  
+
+  if (topicStr.endsWith("settextcolor")) {
+    tft.setTextColor(getValue(strData, ',', 0).toInt(), getValue(strData, ',', 1).toInt());
+  }    
+
+  if (topicStr.endsWith("drawstring")) {
+    textString = getValue(strData, ',', 0);
+    textXPos = getValue(strData, ',', 1).toInt();  
+    textYPos = getValue(strData, ',', 2).toInt();
+    textFont = getValue(strData, ',', 3).toInt();
+    tft.drawString(textString.c_str(),textXPos,textYPos,textFont); // Overwrite the text to clear it
+ 
+  }      
+ 
+} // end callback
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Create a random client ID
+    String clientId = "ESP8266Client-";
+    clientId += String(random(0xffff), HEX);
+    // Attempt to connect
+    if (client.connect(clientId.c_str())) {
+      Serial.println("connected");
+      client.subscribe("TTGO/#",1);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  if (TFT_BL > 0) {
+    pinMode(TFT_BL, OUTPUT);
+    digitalWrite(TFT_BL, HIGH);
+  }
+  
+  tft.init();
+  tft.setRotation(1);
+  tft.fillScreen(TFT_BLACK);
+
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK); // Note: the new fonts do not draw the background colour
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+}
+void loop() {
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+  
+  delay(500);
+}
