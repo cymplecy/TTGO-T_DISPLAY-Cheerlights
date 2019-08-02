@@ -14,4 +14,9 @@ Set of files to display clock on a TTGO-T-DISPLAY EPS32 device
 
 Merged in automatic timezone code from @kd8bxp LeRoy Miller
 
+### v4 MQTT-TTGO-T-DISPLAY
+
+This version acts as just an MQTT receiver and executes TFT code from another computer/device
+So all clever stuff can be done elsewhere and the board is just used as a WiFi capable display
+
 
